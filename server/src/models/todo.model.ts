@@ -13,7 +13,7 @@ const todoSchema: Schema = new Schema(
       required: true,
     },
 
-    status: {
+    done: {
       type: Boolean,
       required: true,
     },
@@ -21,6 +21,7 @@ const todoSchema: Schema = new Schema(
   {
     timestamps: true,
     versionKey: false,
+    collection: "Todos",
   }
 
 )
