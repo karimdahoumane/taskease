@@ -1,6 +1,6 @@
 import { Response, Request } from "express"
-import { ITodo } from "../../types/todo"
-import Todo from "../../models/todo"
+import { ITodo } from "../types/todo"
+import Todo from "../models/todo.model"
 
 const getTodos = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -22,12 +22,12 @@ const getTodo = async (req: Request, res: Response): Promise<void> => {
 
 const addTodo = async (req: Request, res: Response): Promise<void> => {
   try {
-    const body = req.body as Pick<ITodo, "name" | "description" | "status">
+    const body = req.body as Pick<ITodo, "name" | "description" | "done">
 
     const todo: ITodo = new Todo({
       name: body.name,
       description: body.description,
-      status: body.status,
+      done: body.done,
     })
 
     const newTodo: ITodo = await todo.save()
