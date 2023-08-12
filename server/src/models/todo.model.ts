@@ -7,12 +7,10 @@ const todoSchema: Schema = new Schema(
       type: String,
       required: true,
     },
-
     description: {
       type: String,
-      required: true,
+      required: false,
     },
-
     done: {
       type: Boolean,
       required: true,
@@ -23,7 +21,6 @@ const todoSchema: Schema = new Schema(
     versionKey: false,
     collection: "Todos",
   }
-
 )
 
 export default model<ITodo>("Todo", todoSchema)

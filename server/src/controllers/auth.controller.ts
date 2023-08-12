@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { validationResult } from "express-validator";
-import { registerUser, loginUser } from "../services/auth.service";
+import * as AuthService from "../services/auth.service";
 import { IUser } from "./../types/user";
 
 const register = async (req: Request, res: Response): Promise<void> => {
@@ -13,7 +13,7 @@ const register = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const registrationResult = await registerUser(email, firstName, lastName, password);
+    const registrationResult = await AuthService.registerUser(email, firstName, lastName, password);
 
     if (registrationResult.error) {
       res.status(400).json({ message: registrationResult.error });
@@ -36,7 +36,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     const { email, password }: { email: string, password: string } = req.body;
-    const loginResult = await loginUser(email, password);
+    const loginResult = await AuthService.loginUser(email, password);
 
     if (loginResult.error) {
       res.status(401).json({ message: loginResult.error });

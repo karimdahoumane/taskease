@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model";
 import { IUser } from "../types/user";
 
-export async function registerUser(email: string, firstName: string, lastName: string, password: string) {
+export const registerUser = async (email: string, firstName: string, lastName: string, password: string) => {
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return { error: "Email already exists" };
@@ -27,7 +27,7 @@ export async function registerUser(email: string, firstName: string, lastName: s
   return { email, token, message: "User registered successfully" };
 }
 
-export async function loginUser(email: string, password: string) {
+export const loginUser = async (email: string, password: string) => {
   const user: IUser | null = await User.findOne({ email });
 
   if (!user) {
