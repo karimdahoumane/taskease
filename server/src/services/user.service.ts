@@ -9,6 +9,14 @@ const findAllUsers = async (): Promise<IUser[]> => {
   return users
 }
 
+const findUserById = async (id: string): Promise<IUser> => {
+  const user: IUser | null = await User.findById(id)
+  if (!user) {
+    throw new Error("No user found")
+  }
+  return user
+}
+
 const removeUser = async (id: string): Promise<IUser> => {
   const deletedUser: IUser | null = await User.findByIdAndRemove(id)
   if (!deletedUser) {
@@ -17,4 +25,4 @@ const removeUser = async (id: string): Promise<IUser> => {
   return deletedUser
 }
 
-export { findAllUsers, removeUser }
+export { findAllUsers, findUserById, removeUser }

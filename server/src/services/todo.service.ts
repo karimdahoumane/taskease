@@ -17,11 +17,12 @@ const findTodoById = async (id: string): Promise<ITodo> => {
   return todo
 }
 
-const createTodo = async (todoData: Pick<ITodo, "name" | "description" | "done">): Promise<ITodo> => {
+const createTodo = async (todoData: Pick<ITodo, "name" | "description" | "done" | "user_id">): Promise<ITodo> => {
   const todo: ITodo = new Todo({
     name: todoData.name,
     description: todoData.description,
     done: todoData.done,
+    user_id: todoData.user_id,
   });
 
   const newTodo: ITodo = await todo.save();
@@ -36,4 +37,12 @@ const deleteTodoById = async (id: string): Promise<void> => {
   await Todo.findByIdAndRemove(id);
 };
 
-export { findAllTodos, findTodoById, createTodo, updateTodoById, deleteTodoById }
+const findAllTodosByUser = async (user_id: string): Promise<ITodo[]> => {
+  const todos: ITodo[] = await Todo.find({ user_id })
+  if (!todos) {
+    throw new Error("No todos found")
+  }
+  return todos
+}
+
+export { findAllTodos, findTodoById, createTodo, updateTodoById, deleteTodoById, findAllTodosByUser }
