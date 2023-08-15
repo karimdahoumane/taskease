@@ -1,13 +1,18 @@
 import bcrypt from "bcrypt";
 import User from "../models/user.model";
 import { IUser } from "../types/user";
-import { UnauthorizedError } from "../helpers/errors";
+import { BadRequestError, UnauthorizedError } from "../helpers/errors";
 import { signToken } from "../helpers/jwt";
+import { EUserRole } from "../types/user";
 
-export const registerUser = async (email: string, firstName: string, lastName: string, password: string) => {
+export const registerUser = async (email: string, firstName: string, lastName: string, role: string, password: string) => {
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    return { error: "Email already exists" };
+    throw new BadRequestError("Email already in use");
+  }
+
+  if (role !== EUserRole.Admin && role !== EUserRole.User) {
+    throw new BadRequestError("Invalid role");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -15,6 +20,7 @@ export const registerUser = async (email: string, firstName: string, lastName: s
     email,
     firstName,
     lastName,
+    role,
     password: hashedPassword,
   });
 

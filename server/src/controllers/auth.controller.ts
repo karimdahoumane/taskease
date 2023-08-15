@@ -6,14 +6,14 @@ import { BadRequestError } from "../helpers/errors";
 import { asyncCatch } from "../helpers/asyncCatch";
 
 const register = asyncCatch(async (req: Request, res: Response): Promise<void> => {
-  const { email, firstName, lastName, password }: IUser = req.body;
+  const { email, firstName, lastName, role, password }: IUser = req.body;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     throw new BadRequestError(errors.array().map((error) => error.msg).join(", "));
   }
 
-  const registrationResult = await AuthService.registerUser(email, firstName, lastName, password);
+  const registrationResult = await AuthService.registerUser(email, firstName, lastName, role, password);
   if (registrationResult.error) {
     throw new BadRequestError(registrationResult.error);
   }
