@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import User from "../models/user.model";
 import { IUser } from "../types/user";
+import { UnauthorizedError } from "../helpers/errors";
+import { signToken } from "../helpers/jwt";
 
 export const registerUser = async (email: string, firstName: string, lastName: string, password: string) => {
   const existingUser = await User.findOne({ email });
@@ -17,30 +18,21 @@ export const registerUser = async (email: string, firstName: string, lastName: s
     password: hashedPassword,
   });
 
-  const userEmail: string = newUser.email;
-  const token: string = jwt.sign({ email: userEmail }, process.env.JWT_KEY as string);
-  if (!token) {
-    return { error: "Token generation error" };
-  }
+  const token: string = signToken(newUser._id);
 
   await newUser.save();
-  return { email, token, message: "User registered successfully" };
+
+  return { email: newUser.email, token, message: "Registration successful" };
 }
 
 export const loginUser = async (email: string, password: string) => {
-  const user: IUser | null = await User.findOne({ email });
+  const user: IUser = await User.findOne({ email }).select("+password");
 
-  if (!user) {
-    return { error: "Invalid credentials" };
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    throw new UnauthorizedError("Incorrect email or password");
   }
 
-  const passwordMatch: Boolean = await bcrypt.compare(password, user.password);
+  const token: string = signToken(user._id);
 
-  if (!passwordMatch) {
-    return { error: "Invalid credentials" };
-  }
-
-  const token: string = jwt.sign({ email: user.email }, process.env.JWT_KEY as string);
-
-  return { email, token, message: "Login successful" };
+  return { email: user.email, token, message: "Login successful" };
 }

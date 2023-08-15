@@ -1,5 +1,6 @@
 import { IUser, EUserRole } from "../types/user"
 import { model, Schema } from "mongoose"
+import bcrypt from "bcrypt";
 
 const userSchema: Schema = new Schema(
   {
@@ -34,5 +35,12 @@ const userSchema: Schema = new Schema(
     collection: "Users"
   }
 )
+
+userSchema.methods.correctPassword = async function (
+  candidatePassword: string,
+  userPassword: string
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 export default model<IUser>("User", userSchema)

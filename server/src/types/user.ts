@@ -9,6 +9,7 @@ export interface IUser extends Document {
   role: EUserRole;
   createdAt?: Date;
   updatedAt?: Date;
+  correctPassword(candidatePassword: string, userPassword: string): Promise<boolean>;
 }
 
 export enum EUserRole {

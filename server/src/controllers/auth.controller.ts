@@ -25,7 +25,6 @@ const register = async (req: Request, res: Response, next: NextFunction): Promis
   }
 };
 
-
 const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const errors = validationResult(req);
@@ -34,10 +33,11 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
     }
 
     const { email, password }: { email: string, password: string } = req.body;
-    const loginResult = await AuthService.loginUser(email, password);
-    if (loginResult.error) {
-      throw new BadRequestError(loginResult.error);
+    if (!email || !password) {
+      throw new BadRequestError("Email and password are required");
     }
+
+    const loginResult = await AuthService.loginUser(email, password);
 
     res.status(200).json(loginResult);
   } catch (error) {
