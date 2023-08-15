@@ -1,11 +1,11 @@
-import { Response, Request, NextFunction } from "express";
+import { Response, Request } from "express";
 import { validationResult } from "express-validator";
 import * as AuthService from "../services/auth.service";
 import { IUser } from "../types/user";
 import { BadRequestError } from "../helpers/errors";
 import { asyncCatch } from "../helpers/asyncCatch";
 
-const register = asyncCatch(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const register = asyncCatch(async (req: Request, res: Response): Promise<void> => {
   const { email, firstName, lastName, password }: IUser = req.body;
 
   const errors = validationResult(req);
@@ -21,7 +21,7 @@ const register = asyncCatch(async (req: Request, res: Response, next: NextFuncti
   res.status(201).json(registrationResult);
 });
 
-const login = asyncCatch(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const login = asyncCatch(async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     throw new BadRequestError(errors.array().map((error) => error.msg).join(", "));

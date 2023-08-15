@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction } from "express";
+import { Response, Request } from "express";
 import { validationResult } from "express-validator";
 import * as TodoService from "../services/todo.service";
 import { findUserById } from "../services/user.service";
@@ -7,17 +7,17 @@ import { BadRequestError } from "../helpers/errors";
 import { IUser } from "../types/user";
 import { asyncCatch } from "../helpers/asyncCatch";
 
-const getTodos = asyncCatch(async (_: Request, res: Response, _next: NextFunction): Promise<void> => {
+const getTodos = asyncCatch(async (_: Request, res: Response): Promise<void> => {
   const todos: ITodo[] = await TodoService.findAllTodos();
   res.status(200).json({ todos });
 });
 
-const getTodo = asyncCatch(async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+const getTodo = asyncCatch(async (req: Request, res: Response): Promise<void> => {
   const todo: ITodo = await TodoService.findTodoById(req.params.id);
   res.status(200).json({ todo });
 });
 
-const createTodo = asyncCatch(async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+const createTodo = asyncCatch(async (req: Request, res: Response): Promise<void> => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     throw new BadRequestError(errors.array().map((error) => error.msg).join(", "));
@@ -35,19 +35,19 @@ const createTodo = asyncCatch(async (req: Request, res: Response, _next: NextFun
   res.status(201).json({ todo: newTodo });
 });
 
-const updateTodo = asyncCatch(async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+const updateTodo = asyncCatch(async (req: Request, res: Response): Promise<void> => {
   const todoData: ITodo = req.body;
   await TodoService.updateTodoById(req.params.id, todoData);
   res.status(200).json({ message: "Todo updated" });
 });
 
-const deleteTodo = asyncCatch(async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+const deleteTodo = asyncCatch(async (req: Request, res: Response): Promise<void> => {
   await TodoService.deleteTodoById(req.params.id);
   res.status(200).json({ message: "Todo deleted" });
 });
 
 
-const getTodosByUser = asyncCatch(async (req: Request, res: Response, _next: NextFunction): Promise<void> => {
+const getTodosByUser = asyncCatch(async (req: Request, res: Response): Promise<void> => {
   const todos: ITodo[] = await TodoService.findAllTodosByUser(req.params.id);
   res.status(200).json({ todos });
 });
