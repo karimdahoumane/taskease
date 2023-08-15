@@ -13,6 +13,7 @@ const PORT: string | number = process.env.PORT || 3000;
 
 app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use('/api/', todoRoutes)
 app.use(exceptionHandler);
 

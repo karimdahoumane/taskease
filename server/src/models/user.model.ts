@@ -1,5 +1,6 @@
-import { IUser } from "../types/user"
+import { IUser, EUserRole } from "../types/user"
 import { model, Schema } from "mongoose"
+import bcrypt from "bcrypt";
 
 const userSchema: Schema = new Schema(
   {
@@ -21,7 +22,12 @@ const userSchema: Schema = new Schema(
     password: {
       type: String,
       required: true,
-    }
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: Object.values(EUserRole),
+    },
   },
   {
     timestamps: true,
@@ -29,5 +35,22 @@ const userSchema: Schema = new Schema(
     collection: "Users"
   }
 )
+
+userSchema.methods.correctPassword = async function (
+  candidatePassword: string,
+  userPassword: string
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp: number) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = Math.floor(
+      this.passwordChangedAt.getTime() / 1000
+    );
+    return JWTTimestamp < changedTimestamp;
+  }
+  return false;
+};
 
 export default model<IUser>("User", userSchema)
