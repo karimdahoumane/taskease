@@ -10,6 +10,7 @@ export interface IUser extends Document {
   createdAt?: Date;
   updatedAt?: Date;
   correctPassword(candidatePassword: string, userPassword: string): Promise<boolean>;
+  changedPasswordAfter(JWTTimestamp: number | undefined): boolean;
 }
 
 export enum EUserRole {
