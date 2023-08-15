@@ -1,10 +1,11 @@
 import Todo from "../models/todo.model"
 import { ITodo } from "../types/todo"
+import { NotFoundError } from "../helpers/errors"
 
 const findAllTodos = async (): Promise<ITodo[]> => {
   const todos: ITodo[] = await Todo.find()
   if (!todos) {
-    throw new Error("No todos found")
+    throw new NotFoundError("No todos found")
   }
   return todos
 }
@@ -12,7 +13,7 @@ const findAllTodos = async (): Promise<ITodo[]> => {
 const findTodoById = async (id: string): Promise<ITodo> => {
   const todo: ITodo | null = await Todo.findById(id)
   if (!todo) {
-    throw new Error("Todo not found")
+    throw new NotFoundError("Todo not found")
   }
   return todo
 }
@@ -40,7 +41,7 @@ const deleteTodoById = async (id: string): Promise<void> => {
 const findAllTodosByUser = async (user_id: string): Promise<ITodo[]> => {
   const todos: ITodo[] = await Todo.find({ user_id })
   if (!todos) {
-    throw new Error("No todos found")
+    throw new NotFoundError("No todos found")
   }
   return todos
 }

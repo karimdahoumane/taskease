@@ -14,9 +14,6 @@ const register = asyncCatch(async (req: Request, res: Response): Promise<void> =
   }
 
   const registrationResult = await AuthService.registerUser(email, firstName, lastName, role, password);
-  if (registrationResult.error) {
-    throw new BadRequestError(registrationResult.error);
-  }
 
   res.status(201).json(registrationResult);
 });
