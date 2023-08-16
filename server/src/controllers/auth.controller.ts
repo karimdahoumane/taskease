@@ -13,7 +13,7 @@ const register = asyncCatch(async (req: Request, res: Response): Promise<void> =
     throw new BadRequestError(errors.array().map((error) => error.msg).join(", "));
   }
 
-  const registrationResult = await AuthService.registerUser(email, firstName, lastName, role, password);
+  const registrationResult = await AuthService.registerUser(email, firstName, lastName, role, password, res);
 
   res.status(201).json(registrationResult);
 });
@@ -29,7 +29,7 @@ const login = asyncCatch(async (req: Request, res: Response): Promise<void> => {
     throw new BadRequestError("Email and password are required");
   }
 
-  const loginResult = await AuthService.loginUser(email, password);
+  const loginResult = await AuthService.loginUser(email, password, res);
 
   res.status(200).json(loginResult);
 });

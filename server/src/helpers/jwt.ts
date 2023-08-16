@@ -1,4 +1,5 @@
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+import { Response } from 'express';
 
 export const signToken = (id: string) => {
   const payload: JwtPayload = { id };
@@ -22,4 +23,14 @@ export async function verifyToken(token: string): Promise<JwtPayload | null> {
     console.error("Error verifying token:", error);
     return null;
   }
+}
+
+export async function setCookie(res: Response, token: string) {
+  const cookieOptions = {
+    expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRES_IN) * 24 * 60 * 60 * 1000),
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true
+  };
+
+  res.cookie('token', token, cookieOptions);
 }
