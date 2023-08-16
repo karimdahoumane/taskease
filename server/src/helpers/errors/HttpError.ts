@@ -1,4 +1,4 @@
-import { JsonError } from "../types/error";
+import { JsonError } from "../../types/error";
 
 export class HttpError extends Error {
   private statusCode: number;
