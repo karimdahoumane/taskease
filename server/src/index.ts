@@ -7,6 +7,8 @@ import exceptionHandler from "./middlewares/error"
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import compression from "compression";
+import mongoSanitize from "express-mongo-sanitize";
+import xss from "xss-clean";
 
 dotenv.config();
 
@@ -27,6 +29,8 @@ app.use(compression())
 app.use(express.urlencoded({ extended: true }))
 app.use(limiter)
 app.use(helmet())
+app.use(mongoSanitize())
+app.use(xss())
 app.use('/api', todoRoutes)
 app.use(exceptionHandler);
 
