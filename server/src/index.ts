@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import exceptionHandler from "./middlewares/error"
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
+import compression from "compression";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ const limiter = rateLimit({
 
 app.use(cors())
 app.use(express.json())
+app.use(compression())
 app.use(express.urlencoded({ extended: true }))
 app.use(limiter)
 app.use(helmet())
